@@ -1,0 +1,18 @@
+--1. Show the first and last names and city of all the instructors.
+create view instructor_info as 
+    select FIRST_NAME, LAST_NAME, ZIPCODE.CITY
+    from Instructor
+    join ZIPCODE on Instructor.ZIP = ZIPCODE.ZIP;
+
+--2. Show the number of students employed by Crane Co.
+create view crane_co_employees as
+    select count(*) as NUMBER_OF_STUDENTS
+    from STUDENT
+    where EMPLOYER like '%Crane Co.%';
+
+--3. Show the first and last names of all the students enrolled in Intro to Programming. 
+--   (Some names will appear multiple times if they've enrolled multiple times.)
+create view students_enrolled AS
+    select FIRST_NAME, LAST_NAME AS
+    from ENROLLMENT e
+    JOIN SECTION s on e.SECTION_ID = s.SECTION_ID
