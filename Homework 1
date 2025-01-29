@@ -17,15 +17,15 @@ create view students_enrolled AS
         ST.STUDENT_ID, 
         ST.FIRST_NAME, 
         ST.LAST_NAME, 
-        C.description AS Course_Name
+        C.description AS COURSE
 
-        from ENROLLMENT E
-
+        from 
+            STUDENT ST
         JOIN 
-            SECTION S on E.SECTION_ID = S.SECTION_ID
+            ENROLLMENT E on ST.STUDENT_ID = E.STUDENT_ID
+        JOIN 
+            SECTION S on S.SECTION_ID = E.SECTION_ID
         JOIN 
             COURSE C on C.COURSE_NO = S.COURSE_NO
-        JOIN 
-            STUDENT ST on ST.STUDENT_ID = E.STUDENT_ID
         where 
             C.description like '%Intro to Programming%'
