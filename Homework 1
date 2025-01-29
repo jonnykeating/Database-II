@@ -9,7 +9,7 @@ create view crane_co_employees as
     select count(*) as NUMBER_OF_STUDENTS
     from STUDENT
     where EMPLOYER like '%Crane Co.%';
-*/
+
 --3. Show the first and last names of all the students enrolled in Intro to Programming. 
 --   (Some names will appear multiple times if they've enrolled multiple times.)
 create view students_enrolled AS
@@ -29,3 +29,25 @@ create view students_enrolled AS
             COURSE C on C.COURSE_NO = S.COURSE_NO
         where 
             C.description like '%Intro to Programming%'
+*/
+-- 4. Show Oscar McGill's grade in Intro to Java Programming. You will have to calculate this.
+create view MCGILL_GRADE AS
+    select
+        G.NUMERIC_GRADE AS GRADE
+
+        from 
+            STUDENT ST
+        JOIN 
+            GRADE G on ST.STUDENT_ID = G.STUDENT_ID
+        JOIN 
+            ENROLLMENT E on ST.STUDENT_ID = E.STUDENT_ID
+        JOIN 
+            SECTION S on S.SECTION_ID = E.SECTION_ID
+        JOIN 
+            COURSE C on C.COURSE_NO = S.COURSE_NO
+        JOIN
+            GRADE_TYPE_WEIGHT GTW on (G.GRADE_TYPE_CODE = GTW.GRADE_TYPE_CODE and G.SECTION_ID = GTW.SECTION_ID)
+        JOIN
+            GRADE_TYPE_WEIGHT GTW on GTW.GRADE_TYPE_CODE = 
+        where 
+            C.description like '%Intro to Java Programming%' and ST.STUDENT_ID = 173 and G.SECTION_ID = 150;
