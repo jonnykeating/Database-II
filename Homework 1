@@ -13,7 +13,7 @@ create view crane_co_employees as
 --3. Show the first and last names of all the students enrolled in Intro to Programming. 
 --   (Some names will appear multiple times if they've enrolled multiple times.)
 create view students_enrolled AS
-    select 
+    select distinct
         ST.STUDENT_ID, 
         ST.FIRST_NAME, 
         ST.LAST_NAME, 
@@ -29,5 +29,3 @@ create view students_enrolled AS
             STUDENT ST on ST.STUDENT_ID = E.STUDENT_ID
         where 
             C.description like '%Intro to Programming%'
-        Group by 
-            ST.STUDENT_ID, ST.FIRST_NAME, ST.LAST_NAME, C.description;
