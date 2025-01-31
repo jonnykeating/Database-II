@@ -1,18 +1,18 @@
 --1. Show the first and last names and city of all the instructors.
-create view instructor_info as 
+create view hw1_q1 as 
     select FIRST_NAME, LAST_NAME, ZIPCODE.CITY
     from Instructor
     join ZIPCODE on Instructor.ZIP = ZIPCODE.ZIP;
 
 --2. Show the number of students employed by Crane Co.
-create view crane_co_employees as
+create view hw1_q2 as
     select count(*) as NUMBER_OF_STUDENTS
     from STUDENT
     where EMPLOYER like '%Crane Co.%';
 
 --3. Show the first and last names of all the students enrolled in Intro to Programming. 
 --   (Some names will appear multiple times if they've enrolled multiple times.)
-CREATE VIEW students_enrolled AS
+CREATE VIEW hw1_q3 AS
     SELECT
         st.student_id,
         ST.FIRST_NAME, 
@@ -31,7 +31,7 @@ CREATE VIEW students_enrolled AS
             C.description like '%Intro to Programming%';
 
 -- 4. Show Oscar McGill's grade in Intro to Java Programming. You will have to calculate this.
-CREATE VIEW MCGILL_GRADE AS
+CREATE VIEW hw1_q4 AS
     SELECT
         SUM(g.numeric_grade * (GTW.PERCENT_OF_FINAL_GRADE/100)) as INTRO_TO_JAVA_GRADE
 
@@ -52,7 +52,7 @@ CREATE VIEW MCGILL_GRADE AS
             ST.FIRST_NAME LIKE '%Oscar%' and ST.LAST_NAME like '%McGill%' and S.SECTION_ID = 150 and C.DESCRIPTION like '%Intro to Java Programming%';
 
 -- 5. Show all of the users who created a record in the database and the number of records that they made.
-CREATE VIEW RECORDS_CREATED_BY AS
+CREATE VIEW hw1_q5 AS
     SELECT DISTINCT CREATED_BY
         FROM GRADE_CONVERSION
 
