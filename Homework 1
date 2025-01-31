@@ -1,5 +1,5 @@
 --1. Show the first and last names and city of all the instructors.
-/*create view instructor_info as 
+create view instructor_info as 
     select FIRST_NAME, LAST_NAME, ZIPCODE.CITY
     from Instructor
     join ZIPCODE on Instructor.ZIP = ZIPCODE.ZIP;
@@ -12,14 +12,14 @@ create view crane_co_employees as
 
 --3. Show the first and last names of all the students enrolled in Intro to Programming. 
 --   (Some names will appear multiple times if they've enrolled multiple times.)
-create view students_enrolled AS
-    select distinct
-        ST.STUDENT_ID, 
+CREATE VIEW students_enrolled AS
+    SELECT
+        st.student_id,
         ST.FIRST_NAME, 
         ST.LAST_NAME, 
         C.description AS COURSE
 
-        from 
+        FROM 
             STUDENT ST
         JOIN 
             ENROLLMENT E on ST.STUDENT_ID = E.STUDENT_ID
@@ -27,27 +27,76 @@ create view students_enrolled AS
             SECTION S on S.SECTION_ID = E.SECTION_ID
         JOIN 
             COURSE C on C.COURSE_NO = S.COURSE_NO
-        where 
-            C.description like '%Intro to Programming%'
-*/
--- 4. Show Oscar McGill's grade in Intro to Java Programming. You will have to calculate this.
-create view MCGILL_GRADE AS
-    select
-        G.NUMERIC_GRADE AS GRADE
+        WHERE 
+            C.description like '%Intro to Programming%';
 
-        from 
-            STUDENT ST
-        JOIN 
-            GRADE G on ST.STUDENT_ID = G.STUDENT_ID
-        JOIN 
-            ENROLLMENT E on ST.STUDENT_ID = E.STUDENT_ID
-        JOIN 
-            SECTION S on S.SECTION_ID = E.SECTION_ID
-        JOIN 
-            COURSE C on C.COURSE_NO = S.COURSE_NO
+-- 4. Show Oscar McGill's grade in Intro to Java Programming. You will have to calculate this.
+CREATE VIEW MCGILL_GRADE AS
+    SELECT
+        SUM(g.numeric_grade * (GTW.PERCENT_OF_FINAL_GRADE/100)) as INTRO_TO_JAVA_GRADE
+
+
+        FROM 
+            Grade G
         JOIN
-            GRADE_TYPE_WEIGHT GTW on (G.GRADE_TYPE_CODE = GTW.GRADE_TYPE_CODE and G.SECTION_ID = GTW.SECTION_ID)
+            Grade_type_weight GTW on (G.SECTION_ID = GTW.SECTION_ID and G.GRADE_TYPE_CODE = GTW.GRADE_TYPE_CODE)
         JOIN
-            GRADE_TYPE_WEIGHT GTW on GTW.GRADE_TYPE_CODE = 
-        where 
-            C.description like '%Intro to Java Programming%' and ST.STUDENT_ID = 173 and G.SECTION_ID = 150;
+            ENROLLMENT E on (G.SECTION_ID = E.SECTION_ID and G.STUDENT_ID = E.STUDENT_ID)
+        JOIN
+            STUDENT ST on E.STUDENT_ID = ST.STUDENT_ID
+        JOIN
+            SECTION S on E.SECTION_ID = S.SECTION_ID
+        JOIN
+            COURSE C on S.COURSE_NO = C.COURSE_NO
+        WHERE
+            ST.FIRST_NAME LIKE '%Oscar%' and ST.LAST_NAME like '%McGill%' and S.SECTION_ID = 150 and C.DESCRIPTION like '%Intro to Java Programming%';
+
+-- 5. Show all of the users who created a record in the database and the number of records that they made.
+CREATE VIEW RECORDS_CREATED_BY AS
+    SELECT DISTINCT CREATED_BY
+        FROM GRADE_CONVERSION
+
+    UNION ALL
+
+    SELECT DISTINCT CREATED_BY
+        FROM GRADE
+
+    UNION ALL
+
+    SELECT DISTINCT CREATED_BY
+        FROM ENROLLMENT
+
+    UNION ALL
+
+    SELECT DISTINCT CREATED_BY
+        FROM COURSE
+
+    UNION ALL
+
+    SELECT DISTINCT CREATED_BY
+        FROM STUDENT
+
+    UNION ALL
+
+    SELECT DISTINCT CREATED_BY
+        FROM GRADE_TYPE
+
+    UNION ALL
+
+    SELECT DISTINCT CREATED_BY
+        FROM GRADE_TYPE_WEIGHT
+
+    UNION ALL
+
+    SELECT DISTINCT CREATED_BY
+        FROM SECTION
+
+    UNION ALL
+
+    SELECT DISTINCT CREATED_BY
+        FROM INSTRUCTOR
+
+    UNION ALL
+
+    SELECT DISTINCT CREATED_BY
+        FROM ZIPCODE;
