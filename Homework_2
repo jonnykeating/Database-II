@@ -1,0 +1,26 @@
+DECLARE
+          U_COST NUMBER;
+          U_INCREASE_COST NUMBER;
+        COURSE_NAME VARCHAR2(35);
+
+BEGIN
+    select 
+        description
+    into 
+        course_name
+    from 
+        COURSE
+    where
+        COURSE_NO = :U_COURSE_NUM;
+
+    select 
+        sum(COST)
+    into 
+        U_COST
+    from
+        COURSE
+    where 
+        COURSE_NO = :U_COURSE_NUM;
+
+    DBMS_OUTPUT.PUT_LINE(COURSE_NAME||' total revenue was $'|| U_COST);
+    END;
