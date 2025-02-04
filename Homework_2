@@ -1,26 +1,38 @@
 DECLARE
-          U_COST NUMBER;
-          U_INCREASE_COST NUMBER;
-        COURSE_NAME VARCHAR2(35);
+    TOTAL_COST     NUMBER;
+    NUM_OF_STUDENTS NUMBER;
+    INCREASED_COST  NUMBER;
+    COURSE_NAME     VARCHAR2(35);
 
 BEGIN
-    select 
-        description
-    into 
-        course_name
-    from 
+    SELECT 
+        DESCRIPTION
+    INTO 
+        COURSE_NAME
+    FROM 
         COURSE
-    where
-        COURSE_NO = :U_COURSE_NUM;
+    WHERE
+        COURSE_NO = :COURSE_NUM;
 
-    select 
-        sum(COST)
-    into 
-        U_COST
-    from
+    SELECT
+        COUNT(E.STUDENT_ID)
+    INTO
+        NUM_OF_STUDENTS
+    FROM
+        SECTION S
+    JOIN 
+        ENROLLMENT E ON E.SECTION_ID = S.SECTION_ID
+    WHERE 
+        COURSE_NO = :COURSE_NUM AND S.SECTION_ID = E.SECTION_ID;
+
+    SELECT 
+        SUM(COST)
+    INTO 
+        TOTAL_COST
+    FROM
         COURSE
-    where 
-        COURSE_NO = :U_COURSE_NUM;
+    WHERE 
+        COURSE_NO = :COURSE_NUM;
 
-    DBMS_OUTPUT.PUT_LINE(COURSE_NAME||' total revenue was $'|| U_COST);
-    END;
+    DBMS_OUTPUT.PUT_LINE(COURSE_NAME||' total revenue was $'|| (NUM_OF_STUDENTS * TOTAL_COST));
+END;
