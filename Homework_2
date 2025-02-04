@@ -6,9 +6,9 @@ DECLARE
 
 BEGIN
     SELECT 
-        DESCRIPTION
+        DESCRIPTION, COST
     INTO 
-        COURSE_NAME
+        COURSE_NAME, TOTAL_COST
     FROM 
         COURSE
     WHERE
@@ -25,14 +25,6 @@ BEGIN
     WHERE 
         COURSE_NO = :COURSE_NUM AND S.SECTION_ID = E.SECTION_ID;
 
-    SELECT 
-        SUM(COST)
-    INTO 
-        TOTAL_COST
-    FROM
-        COURSE
-    WHERE 
-        COURSE_NO = :COURSE_NUM;
-
-    DBMS_OUTPUT.PUT_LINE(COURSE_NAME||' total revenue was $'|| (NUM_OF_STUDENTS * TOTAL_COST));
+    DBMS_OUTPUT.PUT_LINE(COURSE_NAME||' total revenue was $'|| (NUM_OF_STUDENTS * TOTAL_COST) || '.');
+    DBMS_OUTPUT.PUT_LINE('With a 17% tuition increase it would be $' || (NUM_OF_STUDENTS * TOTAL_COST * 1.17));
 END;
