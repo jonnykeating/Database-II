@@ -1,3 +1,17 @@
+/***********************************************************************
+*   Database II - Homework 2 (PL/SQL)                                  *
+*   Course:       CS 306                                               *
+*   Author:       Jonny Keating                                        *
+*                                                                      *
+*   Description:                                                       *
+*       Write a PL/SQL block that uses a bind variable COURSE_NO. The  *
+*       block will look up the total revenue of all the students that  *
+*       have taken that course. Then it will show that total revenue   *
+*       with a 17% tuition increase. The output should be on two       *
+*       lines: (The name of the course and total revenue on one line   *
+*       and the increase on another line.)                             *
+***********************************************************************/
+
 DECLARE
     TOTAL_COST      course.COST%TYPE;
     NUM_OF_STUDENTS NUMBER := 0;           -- Avoiding nulls by assigning definite value
@@ -5,19 +19,22 @@ DECLARE
     INCREASE_PCNT CONSTANT NUMBER := 1.17; -- Constant for tuition increase
 
 BEGIN
-    -- Get the course name and cost
-    SELECT 
-        DESCRIPTION, COST
-    INTO 
-        COURSE_NAME, TOTAL_COST
-    FROM 
-        COURSE
-    WHERE
-        COURSE_NO = :COURSE_NUM;
-EXCEPTION
-    WHEN NO_DATA_FOUND THEN
-        DBMS_OUTPUT.PUT_LINE('Error: Course not found.');
+    BEGIN
+        -- Get the course name and cost
+        SELECT 
+            DESCRIPTION, COST
+        INTO 
+            COURSE_NAME, TOTAL_COST
+        FROM 
+            COURSE
+        WHERE
+            COURSE_NO =: COURSE_NUM;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            DBMS_OUTPUT.PUT_LINE('No such course exists.');
             RETURN;
+        
+    END;
 
     -- Get the number of students enrolled in the course
     SELECT
@@ -29,9 +46,8 @@ EXCEPTION
     JOIN 
         ENROLLMENT E ON E.SECTION_ID = S.SECTION_ID
     WHERE 
-        COURSE_NO =:COURSE_NUM;
+        COURSE_NO =: COURSE_NUM;
 
     DBMS_OUTPUT.PUT_LINE(COURSE_NAME||' total revenue was $'|| (NUM_OF_STUDENTS * TOTAL_COST) || '.');
     DBMS_OUTPUT.PUT_LINE('With a 17% tuition increase it would be $' || (NUM_OF_STUDENTS * TOTAL_COST * INCREASE_PCNT));
 END;
-
