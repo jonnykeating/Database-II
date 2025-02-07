@@ -1,9 +1,11 @@
 DECLARE
     TOTAL_COST      course.COST%TYPE;
-    NUM_OF_STUDENTS NUMBER;
+    NUM_OF_STUDENTS NUMBER := 0;           -- Avoiding nulls by assigning definite value
     COURSE_NAME     course.description%TYPE;
+    INCREASE_PCNT CONSTANT NUMBER := 1.17; -- Constant for tuition increase
 
 BEGIN
+    -- Get the course name and cost
     SELECT 
         DESCRIPTION, COST
     INTO 
@@ -12,7 +14,12 @@ BEGIN
         COURSE
     WHERE
         COURSE_NO = :COURSE_NUM;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Error: Course not found.');
+            RETURN;
 
+    -- Get the number of students enrolled in the course
     SELECT
         COUNT(E.STUDENT_ID)
     INTO
@@ -25,5 +32,6 @@ BEGIN
         COURSE_NO =:COURSE_NUM;
 
     DBMS_OUTPUT.PUT_LINE(COURSE_NAME||' total revenue was $'|| (NUM_OF_STUDENTS * TOTAL_COST) || '.');
-    DBMS_OUTPUT.PUT_LINE('With a 17% tuition increase it would be $' || (NUM_OF_STUDENTS * TOTAL_COST * 1.17));
+    DBMS_OUTPUT.PUT_LINE('With a 17% tuition increase it would be $' || (NUM_OF_STUDENTS * TOTAL_COST * INCREASE_PCNT));
 END;
+
